@@ -15,17 +15,6 @@ router.get('/:id', (req, res) => {
   });
 });
 
-// router.get('/dest/:location', (req, res) => {
-//   console.log('location');
-//   findByDestination(req.params.location, (err, data) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// });
-
 router.post('/', (req, res) => {
   req.body.created_at = new Date().toString();
   req.body.helpfulVotes = 0;

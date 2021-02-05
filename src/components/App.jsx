@@ -25,7 +25,6 @@ class App extends React.Component {
       reviewsTimeOfYearFilter: [],
       reviewsLanguageFilter: null,
       reviewsRatingFilter: [],
-      id: props.id,
     };
     this.helpfulClickHandler = this.helpfulClickHandler.bind(this);
     this.handleClickClearInput = this.handleClickClearInput.bind(this);
@@ -38,9 +37,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const { id } = this.props;
-    console.log(id);
     this.getData();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { id } = this.props;
+    if (prevProps.id !== id) {
+      this.getData();
+    }
   }
 
   handleClickClearInput() {

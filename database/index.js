@@ -10,11 +10,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-// const db = (database) => (
-//   mongoose.connect(`mongodb://localhost:27017/${database}`, { useNewUrlParser: true }, { useUnifiedTopology: true })
-//     .then(() => console.log('Connected to MONGODB'))
-//     .catch((err) => console.log(err))
-// );
 const findAll = (id, cb) => {
   pool.query(`SELECT * FROM review WHERE destination = ${id}`, (err, { rows }) => {
     if (err) {
@@ -45,18 +40,6 @@ const incHelpfulCounter = (destId, userName, cb) => {
     }
   });
 };
-
-// Look into front end how this is implemented
-// const findByDestination = (destination, cb) => {
-//   const review = { destination };
-//   pool.query(`SEARCH destination ${review}`, (err, data) => {
-//     if (err) {
-//       cb(err, null);
-//     } else {
-//       cb(null, data);
-//     }
-//   });
-// };
 
 const remove = (destId, userName, cb) => {
   pool.query(`DELETE FROM review WHERE userName = '${userName} AND destination = '${destId}'`, (err, data) => {

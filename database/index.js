@@ -25,9 +25,10 @@ const findAll = (id, cb) => {
   });
 };
 const create = (arr, cb) => {
-  const query = 'INSERT INTO review (userName, profilePic, created_at, userHomeLocation, images, starRating, reviewTitle, reviewBody, dateOfExperience, helpfulVotes, destination) VALUES($1, $2, $10, $3, $4, $5, $6, $7, $8, $11, $9)';
+  const query = 'INSERT INTO review (userName, profilePic, created_at, userHomeLocation, images, starRating, reviewTitle, reviewBody, dateOfExperience, helpfulVotes, destination, language, travelerType) VALUES($1, $13, $11, $4, $9, $5, $2, $3, $7, $12, $8, $10, $6)';
   pool.query(query, arr, (err, data) => {
     if (err) {
+      console.log(err);
       cb(err, null);
     } else {
       cb(null, data);

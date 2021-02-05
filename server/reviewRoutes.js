@@ -29,6 +29,7 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   req.body.created_at = new Date().toString();
   req.body.helpfulVotes = 0;
+  req.body.profilePic = 'https://source.unsplash.com/480x360/?avatar';
   const newReview = Object.values(req.body);
   create(newReview, (err, data) => {
     if (err) {

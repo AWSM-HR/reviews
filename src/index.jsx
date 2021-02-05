@@ -4,7 +4,7 @@ import { StylesProvider, createGenerateClassName } from '@material-ui/core/style
 // eslint-disable-next-line no-unused-vars
 import CssBaseline from '@material-ui/core/CssBaseline';
 import 'fontsource-roboto';
-import App from './components/App';
+import Router from './components/Router';
 
 const generateClassName = createGenerateClassName({
   productionPrefix: 'collin',
@@ -12,7 +12,7 @@ const generateClassName = createGenerateClassName({
 });
 
 const WrappedApp = () => (
-  <StylesProvider generateClassName={generateClassName}><App /></StylesProvider>
+  <StylesProvider generateClassName={generateClassName}><Router /></StylesProvider>
 );
 
 ReactDOM.render(<WrappedApp />, document.getElementById('collin'));

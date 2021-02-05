@@ -6,6 +6,8 @@ import React from 'react';
 import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
+import Proptypes from 'prop-types';
+import Moment from 'moment';
 import ReviewListControls from './ReviewListControls';
 import SearchBar from './SearchBar';
 import ReviewList from './ReviewList';
@@ -23,6 +25,7 @@ class App extends React.Component {
       reviewsTimeOfYearFilter: [],
       reviewsLanguageFilter: null,
       reviewsRatingFilter: [],
+      id: props.id,
     };
     this.helpfulClickHandler = this.helpfulClickHandler.bind(this);
     this.handleClickClearInput = this.handleClickClearInput.bind(this);
@@ -35,6 +38,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    const { id } = this.props;
+    console.log(id);
     this.getData();
   }
 
@@ -82,7 +87,8 @@ class App extends React.Component {
     // in the future this would get reviews by location
     // but that would require outside assistance from another service
     // to know which location to grab
-    axios.get('http://localhost:3004/api/reviews/')
+    const { id } = this.props;
+    axios.get(`http://localhost:3004/api/reviews/${id}`)
       .then((res) => {
         this.setState({ reviews: res.data });
         this.populateRatingsAndPages();
@@ -107,10 +113,12 @@ class App extends React.Component {
       reviewsLanguageFilter,
       reviewsTravelerTypeFilter,
       reviewsRatingFilter,
+      reviewsTimeOfYearFilter,
     } = this.state;
+    console.log(this.state);
     const applyAllFilters = () => {
       const filteredReviews = reviews.filter((review) => {
-        if (review.reviewBody.includes(reviewsBodyFilter)) {
+        if (review.reviewbody.includes(reviewsBodyFilter)) {
           return review;
         }
         if (reviewsBodyFilter === '') {
@@ -126,7 +134,7 @@ class App extends React.Component {
       }).filter((review) => {
         let pass = false;
         for (let i = 0; i < reviewsTravelerTypeFilter.length; i += 1) {
-          if (review.travelerType.includes(reviewsTravelerTypeFilter[i])) {
+          if (review.travelertype.includes(reviewsTravelerTypeFilter[i])) {
             pass = true;
             break;
           }
@@ -140,7 +148,7 @@ class App extends React.Component {
       }).filter((review) => {
         let pass = false;
         for (let i = 0; i < reviewsRatingFilter.length; i += 1) {
-          if (review.starRating === reviewsRatingFilter[i]) {
+          if (review.starrating === reviewsRatingFilter[i]) {
             pass = true;
             break;
           }
@@ -151,7 +159,29 @@ class App extends React.Component {
         if (reviewsRatingFilter.length === 0) {
           return review;
         }
-      });
+      })
+        .filter((review) => {
+          if (reviewsTimeOfYearFilter.length === 0) {
+            return review;
+          }
+          let pass = false;
+          const dates = {
+            marMay: ['Mar', 'Apr', 'May'],
+            junAug: ['Jun', 'Jul', 'Aug'],
+            sepNov: ['Sep', 'Oct', 'Nov'],
+            decFeb: ['Dec', 'Jan', 'Feb'],
+          };
+          for (let i = 0; i < reviewsTimeOfYearFilter.length; i++) {
+            const range = reviewsTimeOfYearFilter[i];
+            if (dates[range].includes(Moment(new Date(review.dateofexperience)).format('MMM'))) {
+              pass = true;
+              break;
+            }
+          }
+          if (pass) {
+            return review;
+          }
+        });
       return filteredReviews;
     };
 
@@ -159,7 +189,7 @@ class App extends React.Component {
   }
 
   helpfulClickHandler(e, userName) {
-    const id = e.target.getAttribute('data-id');
+    const { id } = this.props;
     axios.put(`http://localhost:3004/api/reviews/${id}`, { userName })
       .then(() => {
         this.getData();
@@ -172,7 +202,7 @@ class App extends React.Component {
     // const { length } = reviews;
     // const pages = Math.ceil(length / 10);
     const ratings = reviews.reduce((acc, currentValue) => (
-      acc.concat([currentValue.starRating])
+      acc.concat([currentValue.starrating])
     ), []);
 
     const ratingDefinitions = {
@@ -196,17 +226,19 @@ class App extends React.Component {
   }
 
   writeReview() {
+    const { id } = this.props;
     const review = {};
     review.userName = document.getElementById('nameInput').value;
     review.reviewTitle = document.getElementById('titleInput').value;
     review.reviewBody = document.getElementById('bodyInput').value;
     review.userHomeLocation = document.getElementById('homeInput').value;
     review.starRating = Number(document.getElementById('hiddenInput').value);
-    // review.dateOfExperience = document.getElementById('whenInput');
-    review.dateOfExperience = Date.now();
-    review.destination = 'Bangkok';
+    review.travlerType = document.getElementById('whoInput').innerHTML.split(', ');
+    review.dateOfExperience = new Date();
+    review.destination = Number(id);
     review.images = [];
-    axios.post('http://localhost:3004/api/reviews', review)
+    review.language = 'english';
+    axios.post('http://localhost:3004/api/reviews/', review)
       .then((res) => {
         console.log(res);
         this.getData();
@@ -265,5 +297,9 @@ class App extends React.Component {
     );
   }
 }
+
+App.propTypes = {
+  id: Proptypes.string.isRequired,
+};
 
 export default App;

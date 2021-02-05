@@ -28,16 +28,17 @@ const ReviewList = ({ reviewsToRender, helpfulClickHandler }) => {
 
   if (reviewsToRender.length > 0) {
     reviewList = reviewsToRender.map((review) => {
-      const { _id } = review;
+      const { _id, reviewtitle } = review;
       return (
-        <>
+        <div key={reviewtitle}>
+
           <ReviewCard
             review={review}
             helpfulClickHandler={helpfulClickHandler}
             key={String(_id)}
           />
           <Divider />
-        </>
+        </div>
       );
     });
   }
@@ -53,7 +54,7 @@ ReviewList.propTypes = {
   reviewsToRender: Proptypes.arrayOf(Proptypes.shape({
     created_at: Proptypes.string,
     dateOfExperience: Proptypes.string,
-    destination: Proptypes.string,
+    destination: Proptypes.number,
     helpfulVotes: Proptypes.number,
     images: Proptypes.arrayOf(Proptypes.string),
     profilePic: Proptypes.string,

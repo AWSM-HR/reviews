@@ -53,7 +53,6 @@ class ReviewFilters extends React.Component {
     super(props);
     this.state = {
       travelerRatings: props.travelerRatings,
-      handleChangeFilterTravelerType: props.handleChangeFilterTravelerType,
       handleChangeRatingFilter: props.handleChangeRatingFilter,
       ratings: {
         excellent: false,
@@ -96,14 +95,8 @@ class ReviewFilters extends React.Component {
       otherRatings.forEach((key) => {
         filteredRatings[key] = ratings[key];
       });
-      this.setState({
-        ratings: {
-          ...filteredRatings,
-          [rating]: !ratings[rating],
-        },
-      });
+      filteredRatings[rating] = !ratings[rating];
       const ratingsToInclude = [];
-      const updatedRatings = this.state.ratings;
       const ratingKey = {
         excellent: 5,
         good: 4,
@@ -111,14 +104,16 @@ class ReviewFilters extends React.Component {
         poor: 2,
         terrible: 1,
       };
-      const keys = Object.keys(updatedRatings);
-      const values = Object.values(updatedRatings);
+      const keys = Object.keys(filteredRatings);
+      const values = Object.values(filteredRatings);
       for (let i = 0; i < keys.length; i += 1) {
-        if (values) {
+        if (values[i]) {
           ratingsToInclude.push(ratingKey[keys[i]]);
         }
       }
-      console.log(ratingsToInclude);
+      this.setState({
+        ratings: filteredRatings,
+      });
       handleChangeRatingFilter(ratingsToInclude);
     };
 
@@ -158,9 +153,17 @@ class ReviewFilters extends React.Component {
       const time = e.target.getAttribute('data-key');
       const otherTimes = Object.keys(timeOfYear).filter((item) => item !== time);
       const filteredTimes = {};
+      const shownTimes = [];
       otherTimes.forEach((key) => {
         filteredTimes[key] = timeOfYear[key];
+        if (timeOfYear[key]) {
+          shownTimes.push(key);
+        }
       });
+      filteredTimes[time] = !timeOfYear[time];
+      if (!timeOfYear[time]) {
+        shownTimes.push(time);
+      }
       this.setState({
         timeOfYear: {
           ...filteredTimes,
@@ -168,7 +171,7 @@ class ReviewFilters extends React.Component {
         },
       });
       // not just grabbing state and passing it in because setState is async
-      handleChangeFilterTimeOfYear();
+      handleChangeFilterTimeOfYear(shownTimes);
     };
 
     this.handleLanguage = function handleLanguage(e) {

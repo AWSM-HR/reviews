@@ -43,8 +43,8 @@ const useStyles = makeStyles((theme) => ({
 
 const ReviewCard = ({ review, helpfulClickHandler }) => {
   const classes = useStyles();
-  const date = moment(review.created_at).format('MMM-YYYY');
-  const dateOfExperience = moment(review.dateOfExperience).format('MMM-YYYY');
+  const date = moment(new Date(review.created_at)).format('MMM-YYYY');
+  const dateOfExperience = moment(new Date(review.dateofexperience)).format('MMM-YYYY');
   const { _id } = review;
 
   const imagesComponent = () => {
@@ -82,10 +82,10 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
   };
 
   const helpfulVotes = () => {
-    if (review.helpfulVotes === 1) {
+    if (review.helpfulvotes === 1) {
       return '1 Helpful vote.';
     }
-    return `${review.helpfulVotes} Helpful votes.`;
+    return `${review.helpfulvotes} Helpful votes.`;
   };
 
   return (
@@ -93,7 +93,7 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
       <CardHeader
         avatar={(
           <Avatar aria-label="recipe" className={classes.avatar}>
-            <img src={review.profilePic} alt="profile pic" />
+            <img src={review.profilepic} alt="profile pic" />
           </Avatar>
           )}
         action={(
@@ -103,7 +103,7 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
           )}
         title={(
           <Typography variant="subtitle1" color="textPrimary" component="div">
-            {review.userName}
+            {review.username}
             <Typography
               display="inline"
               variant="caption"
@@ -119,7 +119,7 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
           <>
             <LocationOnIcon style={{ fontSize: 14 }} />
             <Typography display="inline" variant="caption" color="textSecondary" component="p">
-              {review.userHomeLocation}
+              {review.userhomelocation}
             </Typography>
           </>
         )}
@@ -128,7 +128,7 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
       <CardContent>
         <Rating
           max={5}
-          value={review.starRating}
+          value={review.starrating}
           readOnly
           className={classes.iconFilled}
           icon={(
@@ -136,10 +136,10 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
           )}
         />
         <Typography variant="h6" color="textPrimary" component="h6">
-          {review.reviewTitle}
+          {review.reviewtitle}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p" paragraph>
-          {review.reviewBody}
+          {review.reviewbody}
         </Typography>
         <Typography variant="body2" color="textPrimary" component="div" paragraph>
           Date of experience:
@@ -160,7 +160,7 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
       <CardActions disableSpacing>
         <IconButton
           aria-label="i found this helpful"
-          onClick={(e) => { helpfulClickHandler(e); }}
+          onClick={(e) => { helpfulClickHandler(e, review.username); }}
           data-id={_id}
           data-testid="helpfulBtn"
         >
@@ -183,16 +183,16 @@ const ReviewCard = ({ review, helpfulClickHandler }) => {
 ReviewCard.propTypes = {
   review: Proptypes.shape({
     created_at: Proptypes.string,
-    dateOfExperience: Proptypes.string,
-    destination: Proptypes.string,
-    helpfulVotes: Proptypes.number,
+    dateofexperience: Proptypes.string,
+    destination: Proptypes.number,
+    helpfulvotes: Proptypes.number,
     images: Proptypes.arrayOf(Proptypes.string),
-    profilePic: Proptypes.string,
-    reviewBody: Proptypes.string,
-    reviewTitle: Proptypes.string,
-    starRating: Proptypes.number,
-    userHomeLocation: Proptypes.string,
-    userName: Proptypes.string,
+    profilepic: Proptypes.string,
+    reviewbody: Proptypes.string,
+    reviewtitle: Proptypes.string,
+    starrating: Proptypes.number,
+    userhomelocation: Proptypes.string,
+    username: Proptypes.string,
     _id: Proptypes.string,
   }).isRequired,
   helpfulClickHandler: Proptypes.func.isRequired,

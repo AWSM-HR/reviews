@@ -1,52 +1,40 @@
 const express = require('express');
-const {
-  findAll, create, incHelpfulCounter,
-} = require('../database/index.js');
+const { pool } = require('../database/index.js');
 
 const router = express.Router();
 
-router.get('/:id', (req, res) => {
-  findAll(req.params.id, (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  });
+router.get('/:id', async (req, res) => {
+  try {
+    const { rows } = await pool().query(`SELECT * FROM review WHERE destination = ${req.params.id}`);
+    res.status(200).send(rows);
+  } catch (err) {
+    res.status(404).send(err);
+  }
 });
 
-// router.get('/dest/:location', (req, res) => {
-//   console.log('location');
-//   findByDestination(req.params.location, (err, data) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.send(data);
-//     }
-//   });
-// });
+router.post('/', async (req, res) => {
+  try {
+    req.body.created_at = new Date().toString();
+    req.body.helpfulVotes = 0;
+    req.body.profilePic = 'https://source.unsplash.com/480x360/?avatar';
 
-router.post('/', (req, res) => {
-  req.body.created_at = new Date().toString();
-  req.body.helpfulVotes = 0;
-  const newReview = Object.values(req.body);
-  create(newReview, (err, data) => {
-    if (err) {
-      res.status(404).send(err);
-    } else {
-      res.status(201).send(data);
-    }
-  });
+    const newReview = Object.values(req.body);
+    const query = 'INSERT INTO review (userName, profilePic, created_at, userHomeLocation, images, starRating, reviewTitle, reviewBody, dateOfExperience, helpfulVotes, destination, language, travelerType) VALUES($1, $13, $11, $4, $9, $5, $2, $3, $7, $12, $8, $10, $6)';
+    const data = await pool().query(query, newReview);
+    res.status(201).send(data);
+  } catch (err) {
+    res.status(404).send(err);
+  }
 });
 
-router.put('/:id', (req, res) => {
-  incHelpfulCounter(req.params.id, req.body.userName, (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.send(data);
-    }
-  });
+router.put('/:id', async (req, res) => {
+  try {
+    const query = `UPDATE review SET helpfulVotes = helpfulVotes + 1 WHERE userName = '${req.body.userName}' AND destination = ${req.params.id}`;
+    const data = await pool().query(query);
+    res.status(201).send(data);
+  } catch (err) {
+    res.status(404).send(err);
+  }
 });
 
 module.exports = router;

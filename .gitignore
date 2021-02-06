@@ -3,3 +3,4 @@ unsplashScraper
 coverage
 database/seeding/unsplashConfig.js
 *.csv
+newreli*

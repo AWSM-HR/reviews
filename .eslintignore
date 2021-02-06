@@ -1,3 +1,5 @@
 /public/bundle.js
 /dev/
 /spec/
+newrelic.js
+script.js

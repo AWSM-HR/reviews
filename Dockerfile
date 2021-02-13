@@ -1,8 +1,7 @@
 FROM node:12-alpine
-WORKDIR /app
-COPY package*.json ./
+WORKDIR /App
+COPY . /App
 RUN npm install
-COPY . .
-
+ENV PSQL_PWD='root'
 EXPOSE 3004
 CMD ["node", "server/server.js"]

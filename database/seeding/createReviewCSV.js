@@ -16,7 +16,7 @@ function createdReviews(streamer, cb) {
     let ok = true;
     do {
       count++;
-      const numOfRevs = Math.floor(Math.random() * 6 + 5);
+      const numOfRevs = Math.floor(Math.random() * 5 + 3);
       for (let i = 0; i < numOfRevs; i += 1) {
         const randomImages = [];
         for (let k = 0; k < Math.floor(Math.random() * 6 + 1); k++) {

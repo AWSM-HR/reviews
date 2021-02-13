@@ -2,18 +2,26 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 export let options = {
-  scenarios: {
-    constant_request_rate: {
-      executor: 'constant-arrival-rate',
-      rate: 400,
-      timeUnit: '1s',
-      duration: '30s',
-      preAllocatedVUs: 150,
-      maxVUs: 230,
-    },
-  },
+  discardResponseBodies: true,
+  duration: '3m',
+  vus: 1000
 };
+
 export default function () {
-  http.get(`http://localhost:3004/#/destination/${Math.floor(Math.random() * 10000000 + 1)}`);
+  // const payload = JSON.stringify({
+  //   userName: 'name',
+  //   reviewTitle: 'title',
+  //   reviewBody: 'Body',
+  //   userHomeLocation: 'United States',
+  //   starRating: 5,
+  //   travelerType: ['couples'],
+  //   dateOfExperience: new Date(),
+  //   destination: 894324,
+  //   images: [],
+  //   language: 'english'
+  // })
+
+  http.get(`http://localhost:3004/#/destination/${Math.ceil(Math.random() * 10000000)}`);
   sleep(1);
+  // http.post(`http://localhost:3004/#/destination/${Math.ceil(Math.random() * 10000000)}`, payload);
 }

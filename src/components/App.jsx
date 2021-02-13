@@ -92,7 +92,7 @@ class App extends React.Component {
     // but that would require outside assistance from another service
     // to know which location to grab
     const { id } = this.props;
-    axios.get(`http://localhost:3004/api/reviews/${id}`)
+    axios.get(`http://13.52.74.42:3004/api/reviews/${id}`)
       .then((res) => {
         this.setState({ reviews: res.data });
         this.populateRatingsAndPages();
@@ -194,7 +194,7 @@ class App extends React.Component {
 
   helpfulClickHandler(e, userName) {
     const { id } = this.props;
-    axios.put(`http://localhost:3004/api/reviews/${id}`, { userName })
+    axios.put(`http://13.52.74.42:3004/api/reviews/${id}`, { userName })
       .then(() => {
         this.getData();
       })
@@ -242,7 +242,7 @@ class App extends React.Component {
     review.destination = Number(id);
     review.images = [];
     review.language = 'english';
-    axios.post('http://localhost:3004/api/reviews/', review)
+    axios.post('http://13.52.74.42:3004/api/reviews/', review)
       .then((res) => {
         console.log(res);
         this.getData();
